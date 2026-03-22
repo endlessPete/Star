@@ -1,0 +1,112 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+  transition: 0.3s ease;
+}
+
+/* Card */
+.card {
+  backdrop-filter: blur(20px);
+  background: rgba(255,255,255,0.7);
+  padding: 30px;
+  border-radius: 20px;
+  width: min(90%, 400px);
+  text-align: center;
+}
+
+.dark .card {
+  background: rgba(30,30,30,0.7);
+  color: #eee;
+}
+
+/* Title */
+h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+/* Buttons */
+.main-btn {
+  display: block;
+  background: black;
+  color: white;
+  padding: 12px;
+  border-radius: 12px;
+  text-decoration: none;
+  margin-bottom: 15px;
+}
+
+.dark .main-btn {
+  background: #222;
+}
+
+.settings-btn {
+  background: transparent;
+  border: 1px solid #999;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+/* Version */
+.version {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+/* Settings Panel */
+#settingsPanel {
+  position: fixed;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.4);
+}
+
+.settings-card {
+  background: white;
+  padding: 25px;
+  border-radius: 20px;
+  width: min(90%, 350px);
+}
+
+.dark .settings-card {
+  background: #222;
+  color: #eee;
+}
+
+select, button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+/* Unsupported */
+#unsupported {
+  display: none;
+  position: fixed;
+  inset: 0;
+  justify-content: center;
+  align-items: center;
+  background: black;
+}
+
+.unsupported-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+}
