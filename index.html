@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<title>Star</title>
+
+<link rel="stylesheet" href="style.css">
+
+<!-- Icons -->
+<link rel="icon" href="Web-icon.JPEG">
+<link rel="apple-touch-icon" href="Web-icon.JPEG">
+</head>
+
+<body>
+
+<!-- Device Restriction -->
+<div id="unsupported">
+  <div class="unsupported-card">
+    <h2>Not Supported</h2>
+    <p>Please visit this page on iOS, iPadOS, or macOS (26.0+).</p>
+    <p>Or… thanks for your attention ✨</p>
+  </div>
+</div>
+
+<!-- Main Card -->
+<div class="container" id="mainContent">
+
+  <div class="card">
+    <h1 id="title">Star</h1>
+
+    <a href="#" class="main-btn">Get Star</a>
+
+    <button class="settings-btn" onclick="openSettings()">Settings</button>
+
+    <p class="version">
+      v1.0 Beta 1<br>
+      © <a href="#">Endlesspete</a> |
+      © <a href="#">Terralinkslabs</a> |
+      © <a href="#">Skylark Inc</a>
+    </p>
+  </div>
+
+</div>
+
+<!-- Settings Panel -->
+<div id="settingsPanel">
+  <div class="settings-card">
+
+    <h2>Settings</h2>
+
+    <label>Theme</label>
+    <select id="themeSelect">
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+      <option value="system">Match System</option>
+    </select>
+
+    <label>Background</label>
+    <select id="bgSelect">
+      <option value="default">Default</option>
+      <option value="theme1">Theme 1</option>
+      <option value="theme2">Theme 2</option>
+      <option value="theme3">Theme 3</option>
+    </select>
+
+    <button onclick="customBackground()">Custom Background</button>
+
+    <button class="close-btn" onclick="closeSettings()">Close</button>
+
+  </div>
+</div>
+
+<script>
+/* ==========================
+   DEVICE CHECK
+========================== */
+function isSupported() {
+  const ua = navigator.userAgent;
+  return /iPhone|iPad|Macintosh/.test(ua);
+}
+
+if (!isSupported()) {
+  document.getElementById("unsupported").style.display = "flex";
+  document.getElementById("mainContent").style.display = "none";
+}
+
+/* ==========================
+   SETTINGS PANEL
+========================== */
+function openSettings() {
+  document.getElementById("settingsPanel").style.display = "flex";
+}
+
+function closeSettings() {
+  document.getElementById("settingsPanel").style.display = "none";
+}
+
+/* ==========================
+   THEME SYSTEM
+========================== */
+const themeSelect = document.getElementById("themeSelect");
+
+function applyTheme(theme) {
+  if (theme === "dark") {
+    document.body.classList.add("dark");
+  } else if (theme === "light") {
+    document.body.classList.remove("dark");
+  } else {
+    // system
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.body.classList.toggle("dark", prefersDark);
+  }
+
+  localStorage.setItem("theme", theme);
+}
+
+themeSelect.addEventListener("change", () => {
+  applyTheme(themeSelect.value);
+});
+
+const savedTheme = localStorage.getItem("theme") || "system";
+themeSelect.value = savedTheme;
+applyTheme(savedTheme);
+
+/* ==========================
+   BACKGROUND SYSTEM
+========================== */
+const defaultBG = "https://pixabay.com/get/g8df78f77ed95bc49175f8b302a59585b4bf25e0e6cf632087f70d39e9e2330bf99bcadd45973538a0b33c96e6bede341286a91a511f5f90385f11b2cadcbf35cf3a30eac1ef4c203bd2aa4812bc35eff.jpg";
+
+const themes = {
+  theme1: "theme1.jpg",
+  theme2: "theme2.jpg",
+  theme3: "theme3.jpg"
+};
+
+function applyBackground(bg) {
+  let url = defaultBG;
+
+  if (bg in themes) {
+    url = themes[bg];
+  }
+
+  document.body.style.backgroundImage = `url('${url}')`;
+  localStorage.setItem("background", bg);
+}
+
+document.getElementById("bgSelect").addEventListener("change", (e) => {
+  applyBackground(e.target.value);
+});
+
+const savedBG = localStorage.getItem("background") || "default";
+document.getElementById("bgSelect").value = savedBG;
+applyBackground(savedBG);
+
+/* ==========================
+   CUSTOM BACKGROUND
+========================== */
+function customBackground() {
+  const url = prompt("Enter image URL:");
+
+  if (url) {
+    document.body.style.backgroundImage = `url('${url}')`;
+    localStorage.setItem("backgroundCustom", url);
+  }
+}
+
+// Restore custom BG
+const customBG = localStorage.getItem("backgroundCustom");
+if (customBG) {
+  document.body.style.backgroundImage = `url('${customBG}')`;
+}
+</script>
+
+</body>
+</html>
