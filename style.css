@@ -1,3 +1,10 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
 body {
   height: 100vh;
   display: flex;
@@ -8,7 +15,7 @@ body {
   background-attachment: fixed;
 }
 
-/* Fix centering */
+/* Center Fix */
 .container {
   display: flex;
   justify-content: center;
@@ -16,7 +23,7 @@ body {
   width: 100%;
 }
 
-/* iOS glass effect upgrade */
+/* Card */
 .card {
   backdrop-filter: blur(25px) saturate(180%);
   background: rgba(255,255,255,0.65);
@@ -24,30 +31,94 @@ body {
   padding: 30px;
   width: min(90%, 400px);
   text-align: center;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
 .dark .card {
   background: rgba(30,30,30,0.6);
+  color: #eee;
 }
 
-/* Buttons feel more native */
+/* Title */
+h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+/* Buttons */
 .main-btn {
+  display: block;
   background: #007aff;
+  color: white;
+  padding: 14px;
   border-radius: 14px;
+  text-decoration: none;
+  margin-bottom: 15px;
   font-weight: 600;
+  transition: 0.2s;
 }
 
 .main-btn:active {
-  transform: scale(0.97);
+  transform: scale(0.96);
 }
 
-/* Settings card */
+.settings-btn {
+  background: transparent;
+  border: 1px solid #aaa;
+  padding: 10px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+/* Version */
+.version {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+/* Settings Panel */
+#settingsPanel {
+  position: fixed;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.4);
+}
+
 .settings-card {
   backdrop-filter: blur(20px);
-  background: rgba(255,255,255,0.8);
+  background: rgba(255,255,255,0.85);
+  padding: 25px;
+  border-radius: 20px;
+  width: min(90%, 350px);
 }
 
 .dark .settings-card {
   background: rgba(30,30,30,0.85);
+  color: #eee;
+}
+
+select, button, input {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+/* Unsupported */
+#unsupported {
+  display: none;
+  position: fixed;
+  inset: 0;
+  justify-content: center;
+  align-items: center;
+  background: black;
+}
+
+.unsupported-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
 }
