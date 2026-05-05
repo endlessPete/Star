@@ -1,77 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-
-<title>Star</title>
-
-<link rel="stylesheet" href="style.css">
-
-<!-- Icons -->
-<link rel="icon" href="Web-icon.JPEG">
-<link rel="apple-touch-icon" href="Web-icon.JPEG">
-</head>
-
-<body>
-
-<!-- Device Restriction -->
-<div id="unsupported">
-  <div class="unsupported-card">
-    <h2>Not Supported</h2>
-    <p>Please visit this page on iOS, iPadOS, or macOS (26.0+).</p>
-    <p>Or… thanks for your attention ✨</p>
-  </div>
-</div>
-
-<!-- Main Card -->
-<div class="container" id="mainContent">
-
-  <div class="card">
-    <h1 id="title">Star</h1>
-
-    <a href="#" class="main-btn">Get Star</a>
-
-    <button class="settings-btn" onclick="openSettings()">Settings</button>
-
-    <p class="version">
-      v1.0 Beta 1<br>
-      © <a href="#">Endlesspete</a> |
-      © <a href="#">Terralinkslabs</a> |
-      © <a href="#">Skylark Inc</a>
-    </p>
-  </div>
-
-</div>
-
-<!-- Settings Panel -->
-<div id="settingsPanel">
-  <div class="settings-card">
-
-    <h2>Settings</h2>
-
-    <label>Theme</label>
-    <select id="themeSelect">
-      <option value="light">Light</option>
-      <option value="dark">Dark</option>
-      <option value="system">Match System</option>
-    </select>
-
-    <label>Background</label>
-    <select id="bgSelect">
-      <option value="default">Default</option>
-      <option value="theme1">Theme 1</option>
-      <option value="theme2">Theme 2</option>
-      <option value="theme3">Theme 3</option>
-    </select>
-
-    <button onclick="customBackground()">Custom Background</button>
-
-    <button class="close-btn" onclick="closeSettings()">Close</button>
-
-  </div>
-</div>
-
 <script>
 /* ==========================
    DEVICE CHECK
@@ -81,9 +7,16 @@ function isSupported() {
   return /iPhone|iPad|Macintosh/.test(ua);
 }
 
-if (!isSupported()) {
+const supported = isSupported();
+
+if (!supported) {
   document.getElementById("unsupported").style.display = "flex";
-  document.getElementById("mainContent").style.display = "none";
+  document.getElementById("mainContent").style.display = "flex";
+  
+  const btn = document.querySelector(".main-btn");
+  btn.style.opacity = "0.5";
+  btn.style.pointerEvents = "none";
+  btn.innerText = "iOS or iPadOS only";
 }
 
 /* ==========================
@@ -98,19 +31,15 @@ function closeSettings() {
 }
 
 /* ==========================
-   THEME SYSTEM
+   THEME SYSTEM (iOS STYLE)
 ========================== */
 const themeSelect = document.getElementById("themeSelect");
 
 function applyTheme(theme) {
+  document.body.classList.remove("dark");
+
   if (theme === "dark") {
     document.body.classList.add("dark");
-  } else if (theme === "light") {
-    document.body.classList.remove("dark");
-  } else {
-    // system
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    document.body.classList.toggle("dark", prefersDark);
   }
 
   localStorage.setItem("theme", theme);
@@ -120,7 +49,7 @@ themeSelect.addEventListener("change", () => {
   applyTheme(themeSelect.value);
 });
 
-const savedTheme = localStorage.getItem("theme") || "system";
+const savedTheme = localStorage.getItem("theme") || "light";
 themeSelect.value = savedTheme;
 applyTheme(savedTheme);
 
@@ -138,12 +67,13 @@ const themes = {
 function applyBackground(bg) {
   let url = defaultBG;
 
-  if (bg in themes) {
+  if (themes[bg]) {
     url = themes[bg];
   }
 
   document.body.style.backgroundImage = `url('${url}')`;
   localStorage.setItem("background", bg);
+  localStorage.removeItem("backgroundCustom");
 }
 
 document.getElementById("bgSelect").addEventListener("change", (e) => {
@@ -155,23 +85,36 @@ document.getElementById("bgSelect").value = savedBG;
 applyBackground(savedBG);
 
 /* ==========================
-   CUSTOM BACKGROUND
+   CUSTOM BACKGROUND (FILE)
 ========================== */
-function customBackground() {
-  const url = prompt("Enter image URL:");
+document.getElementById("fileInput").addEventListener("change", function() {
+  const file = this.files[0];
+  if (!file) return;
 
-  if (url) {
-    document.body.style.backgroundImage = `url('${url}')`;
-    localStorage.setItem("backgroundCustom", url);
-  }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    document.body.style.backgroundImage = `url('${e.target.result}')`;
+    localStorage.setItem("backgroundCustom", e.target.result);
+    localStorage.removeItem("background");
+  };
+  reader.readAsDataURL(file);
+});
+
+/* ==========================
+   CUSTOM BACKGROUND (URL)
+========================== */
+function customBackgroundURL() {
+  const url = prompt("Enter image URL:");
+  if (!url) return;
+
+  document.body.style.backgroundImage = `url('${url}')`;
+  localStorage.setItem("backgroundCustom", url);
+  localStorage.removeItem("background");
 }
 
-// Restore custom BG
+/* Restore custom BG */
 const customBG = localStorage.getItem("backgroundCustom");
 if (customBG) {
   document.body.style.backgroundImage = `url('${customBG}')`;
 }
 </script>
-
-</body>
-</html>
