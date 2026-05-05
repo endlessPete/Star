@@ -1,3 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<title>Star</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="Web-icon.JPEG">
+<link rel="apple-touch-icon" href="Web-icon.JPEG">
+</head>
+
+<body>
+
+<!-- Unsupported -->
+<div id="unsupported">
+  <div class="unsupported-card">
+    <h2>Not Supported</h2>
+    <p>Please visit on iOS, iPadOS, or macOS.</p>
+    <p>Thanks for your attention ✨</p>
+  </div>
+</div>
+
+<!-- Main -->
+<div class="container" id="mainContent">
+  <div class="card">
+
+    <h1>Star</h1>
+
+    <a href="#" class="main-btn">Get Star</a>
+
+    <button onclick="openSettings()">Settings</button>
+
+    <p class="version">
+      v1.0 Beta 2<br>
+      © <a href="#">Endlesspete</a> |
+      © <a href="#">Terralinkslabs</a> |
+      © <a href="#">Skylark Inc</a>
+    </p>
+
+  </div>
+</div>
+
+<!-- Settings -->
+<div id="settingsPanel">
+  <div class="settings-card">
+
+    <h2>Settings</h2>
+
+    <label>Theme</label>
+    <select id="themeSelect">
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+    </select>
+
+    <label>Background</label>
+    <select id="bgSelect">
+      <option value="default">Default</option>
+      <option value="theme1">Theme 1</option>
+      <option value="theme2">Theme 2</option>
+      <option value="theme3">Theme 3</option>
+    </select>
+
+    <label>Custom Background</label>
+    <input type="file" id="fileInput" accept="image/*">
+    <button onclick="customBackgroundURL()">Use Image URL</button>
+
+    <button onclick="closeSettings()">Close</button>
+
+  </div>
+</div>
+
+<!-- YOUR SCRIPT (exactly what you sent) -->
 <script>
 /* ==========================
    DEVICE CHECK
@@ -31,7 +105,7 @@ function closeSettings() {
 }
 
 /* ==========================
-   THEME SYSTEM (iOS STYLE)
+   THEME SYSTEM
 ========================== */
 const themeSelect = document.getElementById("themeSelect");
 
@@ -118,3 +192,6 @@ if (customBG) {
   document.body.style.backgroundImage = `url('${customBG}')`;
 }
 </script>
+
+</body>
+</html>
