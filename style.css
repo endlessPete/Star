@@ -9,6 +9,7 @@ html, body {
   height: 100%;
 }
 
+/* Background */
 body {
   display: flex;
   justify-content: center;
@@ -17,16 +18,33 @@ body {
   background-position: center;
 }
 
+/* Container */
+.container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /* Card */
 .card {
-  backdrop-filter: blur(25px);
+  position: relative;
+  z-index: 2;
+
+  backdrop-filter: blur(calc(30px * var(--card-opacity, 0.65)));
   background: rgba(255,255,255,var(--card-opacity,0.65));
+
   border-radius: 24px;
   padding: 30px;
   width: min(90%, 400px);
   text-align: center;
+
+  transition: background 0.3s, backdrop-filter 0.3s;
 }
 
+/* Dark Mode */
 .dark .card {
   background: rgba(28,28,30,var(--card-opacity,0.65));
   color: #f2f2f7;
@@ -41,6 +59,11 @@ body {
   border-radius: 14px;
   text-decoration: none;
   margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.main-btn:active {
+  transform: scale(0.97);
 }
 
 .main-btn.disabled {
@@ -48,7 +71,7 @@ body {
   color: rgba(255,255,255,0.7);
 }
 
-/* Settings */
+/* Settings Panel */
 #settingsPanel {
   position: fixed;
   inset: 0;
@@ -56,8 +79,10 @@ body {
   justify-content: center;
   align-items: center;
   background: rgba(0,0,0,0.4);
+  z-index: 999;
 }
 
+/* Settings Card */
 .settings-card {
   backdrop-filter: blur(20px);
   background: rgba(255,255,255,var(--card-opacity,0.85));
@@ -69,6 +94,15 @@ body {
 .dark .settings-card {
   background: rgba(28,28,30,var(--card-opacity,0.85));
   color: #f2f2f7;
+}
+
+/* Inputs */
+select, input, button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
 }
 
 /* File Button */
@@ -99,9 +133,10 @@ body {
   color: white;
   padding: 8px;
   border-radius: 50%;
+  z-index: 500;
 }
 
-/* Popup */
+/* Info Popup */
 #infoPopup {
   position: fixed;
   inset: 0;
@@ -109,12 +144,19 @@ body {
   justify-content: center;
   align-items: center;
   background: rgba(0,0,0,0.4);
+  z-index: 1000;
 }
 
 .info-card {
   background: white;
   padding: 20px;
   border-radius: 16px;
+  width: 80%;
+}
+
+.dark .info-card {
+  background: #1c1c1e;
+  color: #f2f2f7;
 }
 
 /* Toast */
@@ -122,14 +164,36 @@ body {
   position: fixed;
   bottom: 40px;
   left: 50%;
-  transform: translateX(-50%);
-  background: black;
+  transform: translateX(-50%) translateY(10px);
+  background: rgba(0,0,0,0.85);
   color: white;
   padding: 10px 15px;
   border-radius: 12px;
   opacity: 0;
+  transition: 0.3s;
+  z-index: 9999;
 }
 
 #toast.show {
   opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Unsupported Screen */
+#unsupported {
+  display: none;
+  position: fixed;
+  inset: 0;
+  justify-content: center;
+  align-items: center;
+  background: black;
+  z-index: 9999;
+}
+
+.unsupported-card {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  text-align: center;
+  width: 80%;
 }
