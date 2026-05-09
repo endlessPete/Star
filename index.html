@@ -13,7 +13,7 @@
 
 <body>
 
-<!-- Unsupported -->
+<!-- Unsupported Screen -->
 <div id="unsupported">
   <div class="unsupported-card">
     <h2>Not Supported</h2>
@@ -28,12 +28,12 @@
 
     <h1>Star</h1>
 
-    <a href="https://www.icloud.com/shortcuts/dea95750ce074e67800b8dc254c50305" class="main-btn" id="mainBtn">Get Star</a>
+    <a href="#" class="main-btn" id="mainBtn">Get Star</a>
 
     <button class="settings-btn" onclick="openSettings()">Settings</button>
 
     <p class="version">
-      v1.0 Beta 2<br>
+      v1.0 Beta 3<br>
       © <a href="#">Endlesspete</a> |
       © <a href="#">Terralinkslabs</a> |
       © <a href="#">Skylark Inc</a>
@@ -63,38 +63,73 @@
     </select>
 
     <label>Custom Background</label>
-    <input type="file" id="fileInput" accept="image/*">
+    <label class="file-btn">
+      Choose Image
+      <input type="file" id="fileInput" accept="image/*">
+    </label>
+
     <button onclick="customBackgroundURL()">Use Image URL</button>
 
-    <button class="close-btn" onclick="closeSettings()">Close</button>
+    <label>UI Opacity</label>
+    <input type="range" id="opacitySlider" min="0.2" max="1" step="0.05">
+
+    <button onclick="closeSettings()">Close</button>
 
   </div>
 </div>
 
+<!-- Info Button -->
+<div id="infoButton" onclick="openInfo()">ⓘ</div>
+
+<!-- Info Popup -->
+<div id="infoPopup">
+  <div class="info-card">
+    <h3>Image Credit</h3>
+    <p id="infoText"></p>
+    <button onclick="closeInfo()">Close</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast">Not available on this device</div>
+
 <script>
+
+/* DEVICE CHECK */
 function isSupported() {
   return /iPhone|iPad|Macintosh/.test(navigator.userAgent);
 }
 
 const supported = isSupported();
-const mainBtn = document.getElementById("mainBtn");
+const btn = document.getElementById("mainBtn");
 
 if (!supported) {
-  document.getElementById("unsupported").style.display = "flex";
-  document.getElementById("mainContent").style.display = "none";
-} else {
-  document.getElementById("unsupported").style.display = "none";
+  btn.classList.add("disabled");
+  btn.innerText = "iOS or iPadOS only";
+  btn.removeAttribute("href");
+
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    showBlockedMessage();
+  });
 }
 
+/* TOAST */
+function showBlockedMessage() {
+  const toast = document.getElementById("toast");
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 2000);
+}
+
+/* SETTINGS */
 function openSettings() {
   document.getElementById("settingsPanel").style.display = "flex";
 }
-
 function closeSettings() {
   document.getElementById("settingsPanel").style.display = "none";
 }
 
-/* Theme */
+/* THEME */
 const themeSelect = document.getElementById("themeSelect");
 
 function applyTheme(theme) {
@@ -102,57 +137,58 @@ function applyTheme(theme) {
   localStorage.setItem("theme", theme);
 }
 
-themeSelect.addEventListener("change", () => {
-  applyTheme(themeSelect.value);
-});
+themeSelect.addEventListener("change", () => applyTheme(themeSelect.value));
 
 const savedTheme = localStorage.getItem("theme") || "light";
 themeSelect.value = savedTheme;
 applyTheme(savedTheme);
 
-/* Background */
+/* BACKGROUNDS */
 const defaultBG = "https://media.idownloadblog.com/wp-content/uploads/2017/06/iOS-10-3-3-wallpaper-1-iPad-AR72014.jpg";
 
 const themes = {
-  theme1: "theme1.jpg",
-  theme2: "theme2.jpg",
-  theme3: "theme3.jpg"
+  theme1: { url: "Themes/theme1.jpg", credit: "Theme 1 credit" },
+  theme2: { url: "Themes/theme2.jpg", credit: "Theme 2 credit" },
+  theme3: { url: "Themes/theme3.jpg", credit: "Theme 3 credit" }
 };
 
 function applyBackground(bg) {
   let url = defaultBG;
 
-  if (themes[bg]) url = themes[bg];
+  if (themes[bg]) {
+    url = themes[bg].url;
+    document.getElementById("infoButton").style.display = "flex";
+    document.getElementById("infoText").innerText = themes[bg].credit;
+
+    localStorage.setItem("background", bg);
+    localStorage.removeItem("backgroundCustom");
+  } else {
+    document.getElementById("infoButton").style.display = "none";
+  }
 
   document.body.style.backgroundImage = `url('${url}')`;
-
-  localStorage.setItem("background", bg);
-  localStorage.removeItem("backgroundCustom");
 }
 
-document.getElementById("bgSelect").addEventListener("change", (e) => {
+document.getElementById("bgSelect").addEventListener("change", e => {
   applyBackground(e.target.value);
 });
 
-const savedBG = localStorage.getItem("background") || "default";
-document.getElementById("bgSelect").value = savedBG;
-applyBackground(savedBG);
-
-/* File upload */
+/* CUSTOM FILE */
 document.getElementById("fileInput").addEventListener("change", function() {
   const file = this.files[0];
   if (!file) return;
 
   const reader = new FileReader();
-  reader.onload = function(e) {
+  reader.onload = e => {
     document.body.style.backgroundImage = `url('${e.target.result}')`;
     localStorage.setItem("backgroundCustom", e.target.result);
     localStorage.removeItem("background");
+    document.getElementById("infoButton").style.display = "none";
   };
   reader.readAsDataURL(file);
 });
 
-/* URL background */
+/* CUSTOM URL */
 function customBackgroundURL() {
   const url = prompt("Enter image URL:");
   if (!url) return;
@@ -160,13 +196,43 @@ function customBackgroundURL() {
   document.body.style.backgroundImage = `url('${url}')`;
   localStorage.setItem("backgroundCustom", url);
   localStorage.removeItem("background");
+  document.getElementById("infoButton").style.display = "none";
 }
 
-/* Restore */
-const customBG = localStorage.getItem("backgroundCustom");
-if (customBG) {
-  document.body.style.backgroundImage = `url('${customBG}')`;
+/* RESTORE */
+const savedCustom = localStorage.getItem("backgroundCustom");
+const savedBG = localStorage.getItem("background");
+
+if (savedCustom) {
+  document.body.style.backgroundImage = `url('${savedCustom}')`;
+} else if (savedBG && themes[savedBG]) {
+  applyBackground(savedBG);
+} else {
+  document.body.style.backgroundImage = `url('${defaultBG}')`;
 }
+
+/* INFO POPUP */
+function openInfo() {
+  document.getElementById("infoPopup").style.display = "flex";
+}
+function closeInfo() {
+  document.getElementById("infoPopup").style.display = "none";
+}
+
+/* OPACITY */
+const slider = document.getElementById("opacitySlider");
+
+function applyOpacity(value) {
+  document.documentElement.style.setProperty('--card-opacity', value);
+  localStorage.setItem("cardOpacity", value);
+}
+
+slider.addEventListener("input", () => applyOpacity(slider.value));
+
+const savedOpacity = localStorage.getItem("cardOpacity") || "0.65";
+slider.value = savedOpacity;
+applyOpacity(savedOpacity);
+
 </script>
 
 </body>
