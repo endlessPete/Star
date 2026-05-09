@@ -1,3 +1,4 @@
+/* Reset */ sex
 * {
   margin: 0;
   padding: 0;
@@ -5,95 +6,113 @@
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-html,
-body {
+html, body {
   height: 100%;
 }
 
+/* Background */
 body {
   display: flex;
   justify-content: center;
   align-items: center;
   background-size: cover;
   background-position: center;
+  transition: background 0.3s ease;
 }
 
+/* Container */
 .container {
   position: relative;
   z-index: 1;
+  width: 100%;
   display: flex;
   justify-content: center;
-  width: 100%;
 }
 
+/* Main Card */
 .card {
   position: relative;
-  width: min(90%, 400px);
-  padding: 30px;
-  text-align: center;
+
+  backdrop-filter: blur(calc(30px * var(--card-opacity, 0.65)));
+  background: rgba(255,255,255,var(--card-opacity,0.65));
+
   border-radius: 24px;
+  padding: 30px;
+  width: min(90%, 400px);
+  text-align: center;
 
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
-
-  background: rgba(255, 255, 255, var(--card-opacity, 0.65));
+  transition: all 0.25s ease;
 }
 
 .dark .card {
-  background: rgba(28, 28, 30, var(--card-opacity, 0.65));
+  background: rgba(28,28,30,var(--card-opacity,0.65));
   color: #f2f2f7;
 }
 
+/* Buttons */
 .main-btn {
   display: block;
-  margin-bottom: 15px;
-  padding: 14px;
-
   background: #007aff;
   color: white;
-
+  padding: 14px;
   border-radius: 14px;
   text-decoration: none;
+  margin-bottom: 15px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.main-btn:active {
+  transform: scale(0.96);
 }
 
 .main-btn.disabled {
-  background: rgba(120, 120, 120, 0.4);
-  color: rgba(255, 255, 255, 0.7);
+  background: rgba(120,120,120,0.4);
+  color: rgba(255,255,255,0.7);
 }
 
-.settings-card {
-  width: min(90%, 350px);
-  padding: 25px;
-  border-radius: 26px;
-
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
-
-  background: rgba(255, 255, 255, 0.85);
-}
-
-.dark .settings-card {
-  background: rgba(28, 28, 30, 0.85);
-  color: #f2f2f7;
-}
-
+/* Settings Panel */
 #settingsPanel {
   position: fixed;
   inset: 0;
-
   display: none;
   justify-content: center;
   align-items: center;
-
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0,0,0,0.4);
   z-index: 999;
 }
 
+/* Settings Card */
+.settings-card {
+  backdrop-filter: blur(30px) saturate(180%);
+  background: rgba(255,255,255,0.85);
+  padding: 25px;
+  border-radius: 26px;
+  width: min(90%, 350px);
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+}
+
+.dark .settings-card {
+  background: rgba(28,28,30,0.85);
+  color: #f2f2f7;
+}
+
+/* Labels */
+label {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+/* Toggle */
 .toggle-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 15px;
 }
 
 .switch {
@@ -104,34 +123,26 @@ body {
 
 .switch input {
   opacity: 0;
-  width: 0;
-  height: 0;
 }
 
 .slider {
   position: absolute;
   inset: 0;
-
   background: #ccc;
   border-radius: 30px;
-
-  transition: 0.25s;
+  transition: 0.3s;
 }
 
 .slider:before {
   content: "";
-
   position: absolute;
-  top: 3px;
-  left: 3px;
-
   width: 22px;
   height: 22px;
-
   background: white;
   border-radius: 50%;
-
-  transition: 0.25s;
+  top: 3px;
+  left: 3px;
+  transition: 0.3s;
 }
 
 input:checked + .slider {
@@ -142,18 +153,60 @@ input:checked + .slider:before {
   transform: translateX(22px);
 }
 
-.file-btn {
-  position: relative;
+/* Inputs */
+select,
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(0,0,0,0.05);
+}
 
-  display: block;
-  margin-top: 10px;
+.dark select,
+.dark input[type="text"] {
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+
+/* Buttons */
+button {
   padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  transition: 0.2s;
+}
 
+button:active {
+  transform: scale(0.97);
+}
+
+/* Primary */
+button:not(.secondary) {
   background: #007aff;
   color: white;
+}
 
-  text-align: center;
+/* Secondary */
+button.secondary {
+  background: rgba(0,0,0,0.08);
+  color: #007aff;
+}
+
+.dark button.secondary {
+  background: rgba(255,255,255,0.08);
+}
+
+/* File Button */
+.file-btn {
+  display: block;
+  background: #007aff;
+  color: white;
+  padding: 12px;
   border-radius: 12px;
+  text-align: center;
+  position: relative;
 }
 
 .file-btn input {
@@ -162,77 +215,112 @@ input:checked + .slider:before {
   opacity: 0;
 }
 
+/* Slider */
+input[type="range"] {
+  appearance: none;
+  height: 4px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 10px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: white;
+  border-radius: 50%;
+  border: 2px solid #007aff;
+}
+
+/* Info Button */
 #infoButton {
   position: fixed;
   top: 15px;
   right: 15px;
-
   display: none;
-
-  padding: 8px;
-
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0,0,0,0.5);
   color: white;
-
+  padding: 8px;
   border-radius: 50%;
+  z-index: 500;
 }
 
+/* Popups */
 #infoPopup,
 #urlPopup {
   position: fixed;
   inset: 0;
-
   display: none;
   justify-content: center;
   align-items: center;
-
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0,0,0,0.4);
   z-index: 1000;
 }
 
 .info-card,
 .url-card {
-  width: 80%;
+  backdrop-filter: blur(30px);
+  background: rgba(255,255,255,0.9);
   padding: 20px;
-
-  background: white;
   border-radius: 16px;
+  width: min(90%, 320px);
 }
 
 .dark .info-card,
 .dark .url-card {
-  background: #1c1c1e;
+  background: rgba(28,28,30,0.95);
   color: #f2f2f7;
 }
 
-input,
-select,
-button {
-  width: 100%;
-  margin-top: 10px;
-  padding: 10px;
-
-  border: none;
-  border-radius: 10px;
+/* URL Input Row */
+.input-row {
+  display: flex;
+  gap: 8px;
 }
 
+.input-row input {
+  flex: 1;
+}
+
+/* Error */
+#urlError {
+  color: #ff3b30;
+  font-size: 13px;
+  display: none;
+}
+
+/* Toast */
 #toast {
   position: fixed;
-  left: 50%;
   bottom: 40px;
-
-  padding: 10px;
-
-  background: black;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  background: rgba(0,0,0,0.85);
   color: white;
-
+  padding: 10px 15px;
   border-radius: 12px;
-
   opacity: 0;
-  transform: translateX(-50%);
-  transition: opacity 0.25s ease;
+  transition: 0.3s;
+  z-index: 9999;
 }
 
 #toast.show {
   opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Unsupported (FULL FIX) */
+#unsupported {
+  display: none;
+  position: fixed;
+  inset: 0;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  z-index: 9999;
+}
+
+.unsupported-card {
+  text-align: center;
+  width: 80%;
 }
