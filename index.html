@@ -13,7 +13,7 @@
 
 <body>
 
-<!-- Unsupported Screen -->
+<!-- Unsupported -->
 <div id="unsupported">
   <div class="unsupported-card">
     <h2>Not Supported</h2>
@@ -33,10 +33,10 @@
     <button class="settings-btn" onclick="openSettings()">Settings</button>
 
     <p class="version">
-      v1.0 Beta 3<br>
-      © <a href="#">Endlesspete</a> |
-      © <a href="#">Terralinkslabs</a> |
-      © <a href="#">Skylark Inc</a>
+      v1.0 Beta 4<br>
+      © <a href="https://x.com/endlesspeteinc" target="_blank" rel="noopener noreferrer">Endlesspete</a> |
+      © <a href="https://x.com/terralinkslabs" target="_blank" rel="noopener noreferrer">Terralinkslabs</a> |
+      © <a href="https://x.com/SkylarkShortcut" target="_blank" rel="noopener noreferrer">Skylark Inc</a>
     </p>
 
   </div>
@@ -48,11 +48,14 @@
 
     <h2>Settings</h2>
 
-    <label>Theme</label>
-    <select id="themeSelect">
-      <option value="light">Light</option>
-      <option value="dark">Dark</option>
-    </select>
+    <!-- Toggle -->
+    <div class="toggle-row">
+      <span>Dark Mode</span>
+      <label class="switch">
+        <input type="checkbox" id="themeToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
 
     <label>Background</label>
     <select id="bgSelect">
@@ -63,29 +66,48 @@
     </select>
 
     <label>Custom Background</label>
+
     <label class="file-btn">
       Choose Image
       <input type="file" id="fileInput" accept="image/*">
     </label>
 
-    <button onclick="customBackgroundURL()">Use Image URL</button>
+    <button class="secondary" onclick="customBackgroundURL()">Use Image URL</button>
 
     <label>UI Opacity</label>
-    <input type="range" id="opacitySlider" min="0.2" max="1" step="0.05">
+    <input type="range" id="opacitySlider" min="0" max="1" step="0.02">
 
-    <button onclick="closeSettings()">Close</button>
+    <button class="secondary" onclick="closeSettings()">Close</button>
 
   </div>
 </div>
 
-<!-- Info Button -->
+<!-- URL Popup -->
+<div id="urlPopup">
+  <div class="url-card">
+    <h3>Enter Image URL</h3>
+
+    <div class="input-row">
+      <input type="text" id="urlInput" placeholder="Paste image URL">
+      <button onclick="pasteURL()">Paste</button>
+    </div>
+
+    <p id="urlError"></p>
+
+    <div class="url-actions">
+      <button class="secondary" onclick="closeURL()">Cancel</button>
+      <button onclick="applyURL()">Apply</button>
+    </div>
+  </div>
+</div>
+
+<!-- Info -->
 <div id="infoButton" onclick="openInfo()">ⓘ</div>
 
-<!-- Info Popup -->
 <div id="infoPopup">
   <div class="info-card">
     <h3>Image Credit</h3>
-    <p id="infoText"></p>
+    <p id="infoText">Placeholder credit text</p>
     <button onclick="closeInfo()">Close</button>
   </div>
 </div>
@@ -95,7 +117,7 @@
 
 <script>
 
-/* DEVICE CHECK */
+/* DEVICE */
 function isSupported() {
   return /iPhone|iPad|Macintosh/.test(navigator.userAgent);
 }
@@ -108,55 +130,53 @@ if (!supported) {
   btn.innerText = "iOS or iPadOS only";
   btn.removeAttribute("href");
 
-  btn.addEventListener("click", (e) => {
+  btn.addEventListener("click", e => {
     e.preventDefault();
-    showBlockedMessage();
+    showToast();
   });
 }
 
 /* TOAST */
-function showBlockedMessage() {
-  const toast = document.getElementById("toast");
-  toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), 2000);
+function showToast() {
+  const t = document.getElementById("toast");
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2000);
 }
 
 /* SETTINGS */
-function openSettings() {
-  document.getElementById("settingsPanel").style.display = "flex";
-}
-function closeSettings() {
-  document.getElementById("settingsPanel").style.display = "none";
-}
+function openSettings(){ document.getElementById("settingsPanel").style.display="flex"; }
+function closeSettings(){ document.getElementById("settingsPanel").style.display="none"; }
 
-/* THEME */
-const themeSelect = document.getElementById("themeSelect");
+/* THEME TOGGLE */
+const toggle = document.getElementById("themeToggle");
 
-function applyTheme(theme) {
-  document.body.classList.toggle("dark", theme === "dark");
-  localStorage.setItem("theme", theme);
+function applyTheme(isDark){
+  document.body.classList.toggle("dark", isDark);
+  localStorage.setItem("theme", isDark ? "dark":"light");
 }
 
-themeSelect.addEventListener("change", () => applyTheme(themeSelect.value));
+toggle.addEventListener("change", ()=>applyTheme(toggle.checked));
 
-const savedTheme = localStorage.getItem("theme") || "light";
-themeSelect.value = savedTheme;
+const savedTheme = localStorage.getItem("theme")==="dark";
+toggle.checked = savedTheme;
 applyTheme(savedTheme);
 
-/* BACKGROUNDS */
-const defaultBG = "https://media.idownloadblog.com/wp-content/uploads/2017/06/iOS-10-3-3-wallpaper-1-iPad-AR72014.jpg";
+/* THEMES (PUT YOUR URLs HERE) */
+const defaultBG = "https://your-default-image-url-here.jpg";
 
 const themes = {
-  theme1: { url: "Themes/theme1.jpg", credit: "Theme 1 credit" },
-  theme2: { url: "Themes/theme2.jpg", credit: "Theme 2 credit" },
-  theme3: { url: "Themes/theme3.jpg", credit: "Theme 3 credit" }
+  theme1: { url: "PASTE_THEME1_URL_HERE", credit: "Theme 1 credit placeholder" },
+  theme2: { url: "PASTE_THEME2_URL_HERE", credit: "Theme 2 credit placeholder" },
+  theme3: { url: "PASTE_THEME3_URL_HERE", credit: "Theme 3 credit placeholder" }
 };
 
-function applyBackground(bg) {
+/* APPLY BACKGROUND */
+function applyBackground(bg){
   let url = defaultBG;
 
   if (themes[bg]) {
     url = themes[bg].url;
+
     document.getElementById("infoButton").style.display = "flex";
     document.getElementById("infoText").innerText = themes[bg].credit;
 
@@ -169,17 +189,17 @@ function applyBackground(bg) {
   document.body.style.backgroundImage = `url('${url}')`;
 }
 
-document.getElementById("bgSelect").addEventListener("change", e => {
+document.getElementById("bgSelect").addEventListener("change", e=>{
   applyBackground(e.target.value);
 });
 
-/* CUSTOM FILE */
-document.getElementById("fileInput").addEventListener("change", function() {
+/* FILE IMAGE */
+document.getElementById("fileInput").addEventListener("change", function(){
   const file = this.files[0];
-  if (!file) return;
+  if(!file) return;
 
   const reader = new FileReader();
-  reader.onload = e => {
+  reader.onload = e=>{
     document.body.style.backgroundImage = `url('${e.target.result}')`;
     localStorage.setItem("backgroundCustom", e.target.result);
     localStorage.removeItem("background");
@@ -188,48 +208,84 @@ document.getElementById("fileInput").addEventListener("change", function() {
   reader.readAsDataURL(file);
 });
 
-/* CUSTOM URL */
-function customBackgroundURL() {
-  const url = prompt("Enter image URL:");
-  if (!url) return;
-
-  document.body.style.backgroundImage = `url('${url}')`;
-  localStorage.setItem("backgroundCustom", url);
-  localStorage.removeItem("background");
-  document.getElementById("infoButton").style.display = "none";
+/* URL POPUP */
+function customBackgroundURL(){
+  document.getElementById("urlPopup").style.display="flex";
 }
+function closeURL(){
+  document.getElementById("urlPopup").style.display="none";
+}
+
+/* PASTE */
+async function pasteURL(){
+  try{
+    const text = await navigator.clipboard.readText();
+    document.getElementById("urlInput").value = text;
+  }catch{
+    showError("Paste not allowed");
+  }
+}
+
+/* APPLY URL WITH VALIDATION */
+function applyURL(){
+  const url = document.getElementById("urlInput").value.trim();
+  if(!url) return;
+
+  const img = new Image();
+
+  img.onload = ()=>{
+    document.body.style.backgroundImage = `url('${url}')`;
+    localStorage.setItem("backgroundCustom", url);
+    localStorage.removeItem("background");
+    document.getElementById("infoButton").style.display="none";
+    closeURL();
+  };
+
+  img.onerror = ()=>{
+    showError("Invalid image URL");
+  };
+
+  img.src = url;
+}
+
+/* ERROR */
+function showError(msg){
+  const e = document.getElementById("urlError");
+  e.innerText = msg;
+  e.style.display="block";
+}
+
+document.getElementById("urlInput").addEventListener("input", ()=>{
+  document.getElementById("urlError").style.display="none";
+});
 
 /* RESTORE */
 const savedCustom = localStorage.getItem("backgroundCustom");
 const savedBG = localStorage.getItem("background");
 
-if (savedCustom) {
+if(savedCustom){
   document.body.style.backgroundImage = `url('${savedCustom}')`;
-} else if (savedBG && themes[savedBG]) {
+}else if(savedBG){
   applyBackground(savedBG);
-} else {
+}else{
   document.body.style.backgroundImage = `url('${defaultBG}')`;
 }
 
-/* INFO POPUP */
-function openInfo() {
-  document.getElementById("infoPopup").style.display = "flex";
-}
-function closeInfo() {
-  document.getElementById("infoPopup").style.display = "none";
-}
+/* INFO */
+function openInfo(){ document.getElementById("infoPopup").style.display="flex"; }
+function closeInfo(){ document.getElementById("infoPopup").style.display="none"; }
 
 /* OPACITY */
 const slider = document.getElementById("opacitySlider");
 
-function applyOpacity(value) {
-  document.documentElement.style.setProperty('--card-opacity', value);
-  localStorage.setItem("cardOpacity", value);
+function applyOpacity(v){
+  document.documentElement.style.setProperty('--card-opacity', v);
+  localStorage.setItem("cardOpacity", v);
 }
 
-slider.addEventListener("input", () => applyOpacity(slider.value));
+slider.addEventListener("input", ()=>applyOpacity(slider.value));
 
-const savedOpacity = localStorage.getItem("cardOpacity") || "0.65";
+const savedOpacity = localStorage.getItem("cardOpacity") ?? 0.65;
 slider.value = savedOpacity;
 applyOpacity(savedOpacity);
 
