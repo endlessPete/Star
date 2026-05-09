@@ -15,37 +15,21 @@ body {
   align-items: center;
   background-size: cover;
   background-position: center;
-  background-attachment: fixed;
-}
-
-/* Container */
-.container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 /* Card */
 .card {
-  backdrop-filter: blur(25px) saturate(180%);
-  background: rgba(255,255,255,0.65);
+  backdrop-filter: blur(25px);
+  background: rgba(255,255,255,var(--card-opacity,0.65));
   border-radius: 24px;
   padding: 30px;
   width: min(90%, 400px);
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
 .dark .card {
-  background: rgba(30,30,30,0.65);
-  color: #eee;
-}
-
-/* Title */
-h1 {
-  font-size: 2rem;
-  margin-bottom: 20px;
+  background: rgba(28,28,30,var(--card-opacity,0.65));
+  color: #f2f2f7;
 }
 
 /* Buttons */
@@ -57,29 +41,14 @@ h1 {
   border-radius: 14px;
   text-decoration: none;
   margin-bottom: 15px;
-  font-weight: 600;
-  transition: 0.2s;
 }
 
-.main-btn:active {
-  transform: scale(0.96);
+.main-btn.disabled {
+  background: rgba(120,120,120,0.4);
+  color: rgba(255,255,255,0.7);
 }
 
-.settings-btn {
-  background: transparent;
-  border: 1px solid #aaa;
-  padding: 10px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-}
-
-/* Version */
-.version {
-  font-size: 0.8rem;
-  opacity: 0.7;
-}
-
-/* Settings Panel */
+/* Settings */
 #settingsPanel {
   position: fixed;
   inset: 0;
@@ -87,43 +56,80 @@ h1 {
   justify-content: center;
   align-items: center;
   background: rgba(0,0,0,0.4);
-  z-index: 999;
 }
 
 .settings-card {
   backdrop-filter: blur(20px);
-  background: rgba(255,255,255,0.85);
+  background: rgba(255,255,255,var(--card-opacity,0.85));
   padding: 25px;
   border-radius: 20px;
   width: min(90%, 350px);
 }
 
 .dark .settings-card {
-  background: rgba(30,30,30,0.85);
-  color: #eee;
+  background: rgba(28,28,30,var(--card-opacity,0.85));
+  color: #f2f2f7;
 }
 
-select, button, input {
-  width: 100%;
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 10px;
-}
-
-/* Unsupported */
-#unsupported {
-  display: none;
-  position: fixed;
-  inset: 0;
-  justify-content: center;
-  align-items: center;
-  background: black;
-  z-index: 1000;
-}
-
-.unsupported-card {
-  background: white;
-  padding: 20px;
+/* File Button */
+.file-btn {
+  display: block;
+  background: #007aff;
+  color: white;
+  padding: 12px;
   border-radius: 12px;
   text-align: center;
+  margin-top: 10px;
+  position: relative;
+}
+
+.file-btn input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+/* Info Button */
+#infoButton {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  display: none;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  padding: 8px;
+  border-radius: 50%;
+}
+
+/* Popup */
+#infoPopup {
+  position: fixed;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.4);
+}
+
+.info-card {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+}
+
+/* Toast */
+#toast {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: black;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 12px;
+  opacity: 0;
+}
+
+#toast.show {
+  opacity: 1;
 }
